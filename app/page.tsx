@@ -17,31 +17,31 @@ import { cn } from '@/lib/utils'
 const TOOLS = [
   {
     id: 'chat',
-    label: 'Career Chat',
-    short: 'Chat',
+    label: 'キャリア相談',
+    short: '相談',
     icon: MessageSquare,
-    tagline: 'Talk through any career decision with your AI coach.',
+    tagline: 'AIコーチとキャリアの悩みや決断を気軽に相談できます。',
   },
   {
     id: 'resume',
-    label: 'Resume Analysis',
-    short: 'Resume',
+    label: '職務経歴書の分析',
+    short: '経歴書',
     icon: FileText,
-    tagline: 'Get a scored breakdown and prioritized fixes for your resume.',
+    tagline: '職務経歴書を採点し、優先度つきの改善点を提示します。',
   },
   {
     id: 'jobs',
-    label: 'Role Matches',
-    short: 'Roles',
+    label: '職種のマッチング',
+    short: '職種',
     icon: Briefcase,
-    tagline: 'Discover roles that fit your skills, interests, and goals.',
+    tagline: 'スキル・興味・目標に合った職種を見つけます。',
   },
   {
     id: 'skills',
-    label: 'Skills & Learning',
-    short: 'Skills',
+    label: 'スキルと学習',
+    short: 'スキル',
     icon: Target,
-    tagline: 'See your skill gaps and get a step-by-step learning plan.',
+    tagline: 'スキルの不足を可視化し、段階的な学習プランを作成します。',
   },
 ] as const
 
@@ -64,7 +64,7 @@ export default function Page() {
               <span className="text-primary"> AI</span>
             </p>
             <p className="text-[11px] text-muted-foreground">
-              Your personal AI career coach
+              あなた専用のAIキャリアコーチ
             </p>
           </div>
         </div>
@@ -74,20 +74,20 @@ export default function Page() {
         <section className="mb-8 text-center sm:mb-10">
           <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground">
             <span className="size-1.5 rounded-full bg-highlight" />
-            Guidance that actually moves your career forward
+            キャリアを前に進めるための実践的なアドバイス
           </span>
           <h1 className="mx-auto mt-4 max-w-2xl font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-            Find your direction and take the next step with confidence
+            進むべき方向を見つけ、自信を持って次の一歩を
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground text-pretty sm:text-base">
-            Chat with an AI coach, sharpen your resume, discover roles that fit,
-            and build a plan to close your skill gaps — all in one place.
+            AIコーチへの相談、職務経歴書のブラッシュアップ、自分に合う職種の発見、
+            スキル不足を埋める学習プランづくり。すべてをこの1つの場所で。
           </p>
         </section>
 
         <nav
           className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4"
-          aria-label="Career tools"
+          aria-label="キャリアツール"
         >
           {TOOLS.map((tool) => {
             const Icon = tool.icon
@@ -138,8 +138,7 @@ export default function Page() {
 
       <footer className="border-t">
         <div className="mx-auto max-w-5xl px-4 py-6 text-center text-xs text-muted-foreground sm:px-6">
-          Career Compass AI · Guidance is AI-generated — use your own judgment for
-          important decisions.
+          Career Compass AI · アドバイスはAIによって生成されます。重要な決断はご自身の判断で。
         </div>
       </footer>
     </div>

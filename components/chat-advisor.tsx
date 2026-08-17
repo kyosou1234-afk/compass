@@ -8,10 +8,10 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const SUGGESTIONS = [
-  'How do I pivot from marketing into product management?',
-  'What should I say when asked about my salary expectations?',
-  'Help me prepare for a senior engineering interview.',
-  'I feel stuck in my career. How do I find direction?',
+  'マーケティングからプロダクトマネージャーに転向するには？',
+  '面接で希望年収を聞かれたら何と答えればいい？',
+  'シニアエンジニアの面接対策を手伝ってほしい。',
+  'キャリアで行き詰まっています。どう方向性を見つければいい？',
 ]
 
 export function ChatAdvisor() {
@@ -45,11 +45,10 @@ export function ChatAdvisor() {
               <Sparkles className="size-6" />
             </span>
             <h3 className="mt-4 font-display text-lg font-semibold">
-              Ask your career coach anything
+              キャリアコーチに何でも相談
             </h3>
             <p className="mt-1 max-w-sm text-sm text-muted-foreground text-pretty">
-              Career moves, interviews, negotiation, growth — get honest, specific
-              guidance tailored to your situation.
+              転職、面接、給与交渉、成長 — あなたの状況に合わせた、正直で具体的なアドバイスをお届けします。
             </p>
             <div className="mt-6 grid w-full max-w-lg gap-2 sm:grid-cols-2">
               {SUGGESTIONS.map((s) => (
@@ -101,7 +100,7 @@ export function ChatAdvisor() {
 
         {error && (
           <p className="text-center text-sm text-destructive">
-            Something went wrong. Please try again.
+            問題が発生しました。もう一度お試しください。
           </p>
         )}
       </div>
@@ -128,7 +127,7 @@ export function ChatAdvisor() {
             }
           }}
           rows={1}
-          placeholder="Ask about your career..."
+          placeholder="キャリアについて質問する..."
           className="max-h-32 min-h-11 flex-1 resize-none rounded-xl border bg-background px-3.5 py-2.5 text-sm outline-none transition-colors focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-ring/30"
         />
         <Button
@@ -136,7 +135,7 @@ export function ChatAdvisor() {
           size="icon"
           disabled={busy || !input.trim()}
           className="size-11 shrink-0 rounded-xl"
-          aria-label="Send message"
+          aria-label="メッセージを送信"
         >
           <Send className="size-4" />
         </Button>
