@@ -8,11 +8,15 @@ const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ?? ''
 
 const googleDirect = createGoogleGenerativeAI({ apiKey })
 
-export const MODEL = googleDirect('gemini-2.5-flash')
+export const MODEL = googleDirect('gemini-3.6-flash')
 
 // 有効な Gemini APIキーが設定されているかを判定します。
-// Gemini のキーは "AIza" で始まる39文字前後の文字列です。
-// キーが未設定・不正な場合は、デモ用の見本データを表示します。
+// Gemini のキーは、新しい "AQ." 形式（2026年以降）と、
+// 従来の "AIza" 形式のどちらかで始まります。
+// 空白を含む値（curlコマンドの貼り間違いなど）や、
+// 未設定・不正な場合は、デモ用の見本データを表示します。
 export function hasValidGeminiKey(): boolean {
-  return apiKey.startsWith('AIza') && apiKey.length >= 30 && apiKey.length <= 100
+  if (/\s/.test(apiKey)) return false
+  const looksLikeKey = apiKey.startsWith('AQ.') || apiKey.startsWith('AIza')
+  return looksLikeKey && apiKey.length >= 20 && apiKey.length <= 120
 }
