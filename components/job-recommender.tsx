@@ -15,6 +15,12 @@ const DEMAND: Record<string, string> = {
   low: 'border-border bg-muted text-muted-foreground',
 }
 
+const DEMAND_LABEL: Record<string, string> = {
+  high: '需要：高',
+  medium: '需要：中',
+  low: '需要：低',
+}
+
 export function JobRecommender() {
   const [skills, setSkills] = useState('')
   const [interests, setInterests] = useState('')
@@ -34,10 +40,10 @@ export function JobRecommender() {
         body: JSON.stringify({ skills, interests, experience }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Could not generate recommendations')
+      if (!res.ok) throw new Error(data.error || 'おすすめを生成できませんでした')
       setResult(data as JobRecommendations)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Something went wrong.')
+      setError(e instanceof Error ? e.message : '問題が発生しました。')
     } finally {
       setLoading(false)
     }
@@ -47,26 +53,26 @@ export function JobRecommender() {
     <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
       <div className="rounded-2xl border bg-card p-5">
         <Field
-          label="Your skills"
-          hint="comma separated"
+          label="あなたのスキル"
+          hint="カンマ区切り"
           value={skills}
           onChange={setSkills}
-          placeholder="e.g. Python, data analysis, SQL, communication"
+          placeholder="例：Python、データ分析、SQL、コミュニケーション"
           textarea
         />
         <Field
-          label="Interests"
-          hint="optional"
+          label="興味・関心"
+          hint="任意"
           value={interests}
           onChange={setInterests}
-          placeholder="e.g. climate tech, working with people, building products"
+          placeholder="例：気候テック、人と関わる仕事、プロダクト開発"
         />
         <Field
-          label="Experience / background"
-          hint="optional"
+          label="経験・経歴"
+          hint="任意"
           value={experience}
           onChange={setExperience}
-          placeholder="e.g. 3 years in retail, career changer, recent grad"
+          placeholder="例：小売業で3年、キャリアチェンジ、新卒"
         />
         <Button
           onClick={recommend}
@@ -75,11 +81,11 @@ export function JobRecommender() {
         >
           {loading ? (
             <>
-              <Loader2 className="size-4 animate-spin" /> Finding roles…
+              <Loader2 className="size-4 animate-spin" /> 職種を探しています…
             </>
           ) : (
             <>
-              <Sparkles className="size-4" /> Recommend roles
+              <Sparkles className="size-4" /> 職種をおすすめする
             </>
           )}
         </Button>
@@ -87,16 +93,16 @@ export function JobRecommender() {
       </div>
 
       <div className="min-h-64">
-        {loading && <SkeletonPanel label="Matching your profile to in-demand roles…" />}
+        {loading && <SkeletonPanel label="あなたのプロフィールを需要のある職種と照合しています…" />}
         {!loading && !result && (
-          <EmptyPanel text="Tailored role recommendations with match scores and salary ranges will appear here." />
+          <EmptyPanel text="マッチ度と想定年収つきの、あなたに合った職種のおすすめがここに表示されます。" />
         )}
         {result && (
           <div className="space-y-3">
             {result.roles.map((role, i) => (
               <div key={i} className="rounded-2xl border bg-card p-4 sm:p-5">
                 <div className="flex items-start gap-4">
-                  <ScoreRing value={role.matchScore} size={64} label="match" />
+                  <ScoreRing value={role.matchScore} size={64} label="マッチ度" />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <h3 className="font-display text-base font-semibold">
@@ -104,12 +110,12 @@ export function JobRecommender() {
                       </h3>
                       <span
                         className={cn(
-                          'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase',
+                          'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium',
                           DEMAND[role.demand],
                         )}
                       >
                         <TrendingUp className="size-3" />
-                        {role.demand} demand
+                        {DEMAND_LABEL[role.demand] ?? role.demand}
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground text-pretty">

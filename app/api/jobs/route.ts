@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
   if (!skills || skills.trim().length < 3) {
     return Response.json(
-      { error: 'Please list at least a few skills so we can find matching roles.' },
+      { error: 'マッチする職種を探すために、いくつかスキルを入力してください。' },
       { status: 400 },
     )
   }
@@ -21,14 +21,15 @@ export async function POST(req: Request) {
   const { object } = await generateObject({
     model: MODEL,
     schema: jobRecommendationsSchema,
-    prompt: `You are a career-matching expert. Recommend the best-fit roles for this person.
+    prompt: `あなたはキャリアマッチングの専門家です。この人に最も合う職種を提案してください。
 
-Skills: ${skills}
-Interests: ${interests || 'not specified'}
-Experience level / background: ${experience || 'not specified'}
+スキル: ${skills}
+興味・関心: ${interests || '指定なし'}
+経験レベル・経歴: ${experience || '指定なし'}
 
-Recommend realistic roles that fit their profile and current job market. Sort by best match first.
-Give an honest match score, an approximate salary range, and current market demand for each.`,
+この人のプロフィールと現在の求人市場に合った、現実的な職種を提案してください。マッチ度の高い順に並べてください。
+各職種について、正直なマッチ度、おおよその想定年収（日本円）、現在の市場での需要を示してください。
+出力のすべてのテキスト（職種名・理由・スキルなど）は必ず自然な日本語で記述してください。想定年収は「500万〜700万円」のように日本円で表記してください。`,
   })
 
   return Response.json(object)

@@ -14,6 +14,12 @@ const PRIORITY: Record<string, string> = {
   low: 'text-muted-foreground',
 }
 
+const PRIORITY_LABEL: Record<string, string> = {
+  high: '優先度：高',
+  medium: '優先度：中',
+  low: '優先度：低',
+}
+
 export function SkillsPlanner() {
   const [targetRole, setTargetRole] = useState('')
   const [currentSkills, setCurrentSkills] = useState('')
@@ -32,10 +38,10 @@ export function SkillsPlanner() {
         body: JSON.stringify({ targetRole, currentSkills }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Could not build a plan')
+      if (!res.ok) throw new Error(data.error || 'プランを作成できませんでした')
       setResult(data as SkillsGap)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Something went wrong.')
+      setError(e instanceof Error ? e.message : '問題が発生しました。')
     } finally {
       setLoading(false)
     }
@@ -45,25 +51,25 @@ export function SkillsPlanner() {
     <div className="grid gap-6 lg:grid-cols-[1fr_1.3fr]">
       <div className="rounded-2xl border bg-card p-5">
         <label className="text-sm font-medium" htmlFor="goal-role">
-          Role you want to grow into
+          目指したい職種
         </label>
         <input
           id="goal-role"
           value={targetRole}
           onChange={(e) => setTargetRole(e.target.value)}
-          placeholder="e.g. Data Scientist"
+          placeholder="例：データサイエンティスト"
           className="mt-1.5 h-10 w-full rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-ring/30"
         />
 
         <label className="mt-4 block text-sm font-medium" htmlFor="current-skills">
-          Your current skills{' '}
-          <span className="text-muted-foreground">(optional)</span>
+          今持っているスキル{' '}
+          <span className="text-muted-foreground">(任意)</span>
         </label>
         <textarea
           id="current-skills"
           value={currentSkills}
           onChange={(e) => setCurrentSkills(e.target.value)}
-          placeholder="e.g. Excel, some Python, basic statistics"
+          placeholder="例：Excel、少しPython、基礎的な統計"
           className="mt-1.5 min-h-32 w-full resize-y rounded-lg border bg-background p-3 text-sm leading-relaxed outline-none focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-ring/30"
         />
 
@@ -74,11 +80,11 @@ export function SkillsPlanner() {
         >
           {loading ? (
             <>
-              <Loader2 className="size-4 animate-spin" /> Building your plan…
+              <Loader2 className="size-4 animate-spin" /> プランを作成中…
             </>
           ) : (
             <>
-              <Sparkles className="size-4" /> Build my learning plan
+              <Sparkles className="size-4" /> 学習プランを作成する
             </>
           )}
         </Button>
@@ -87,15 +93,15 @@ export function SkillsPlanner() {
 
       <div className="min-h-64">
         {loading && (
-          <SkeletonPanel label="Analyzing your skill gaps and mapping a roadmap…" />
+          <SkeletonPanel label="スキルの不足を分析し、ロードマップを作成しています…" />
         )}
         {!loading && !result && (
-          <EmptyPanel text="A skills-gap breakdown and a step-by-step learning roadmap will appear here." />
+          <EmptyPanel text="スキル不足の内訳と、段階的な学習ロードマップがここに表示されます。" />
         )}
         {result && (
           <div className="space-y-5">
             <div className="flex items-center gap-4 rounded-2xl border bg-card p-5">
-              <ScoreRing value={result.readinessScore} label="ready" />
+              <ScoreRing value={result.readinessScore} label="達成度" />
               <div>
                 <p className="font-display text-sm font-semibold">
                   {result.targetRole}
@@ -107,8 +113,8 @@ export function SkillsPlanner() {
             </div>
 
             <div className="rounded-2xl border bg-card p-5">
-              <h3 className="mb-4 font-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                Skills gap
+              <h3 className="mb-4 font-display text-sm font-semibold tracking-wide text-muted-foreground">
+                スキルの不足
               </h3>
               <div className="space-y-4">
                 {result.skills.map((s, i) => (
@@ -117,11 +123,11 @@ export function SkillsPlanner() {
                       <span className="font-medium">{s.name}</span>
                       <span
                         className={cn(
-                          'text-[11px] font-medium uppercase',
+                          'text-[11px] font-medium',
                           PRIORITY[s.priority],
                         )}
                       >
-                        {s.priority} priority
+                        {PRIORITY_LABEL[s.priority] ?? s.priority}
                       </span>
                     </div>
                     <LevelBar current={s.currentLevel} required={s.requiredLevel} />
@@ -131,11 +137,11 @@ export function SkillsPlanner() {
               <div className="mt-4 flex items-center gap-4 text-[11px] text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <span className="inline-block h-2 w-4 rounded-full bg-primary" />
-                  Current level
+                  現在のレベル
                 </span>
                 <span className="flex items-center gap-1.5">
                   <span className="inline-block h-3 w-0.5 rounded bg-highlight" />
-                  Target level
+                  目標レベル
                 </span>
               </div>
             </div>
@@ -143,7 +149,7 @@ export function SkillsPlanner() {
             <div className="rounded-2xl border bg-card p-5">
               <h3 className="mb-4 flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 <GraduationCap className="size-4 text-primary" />
-                Learning roadmap
+                学習ロードマップ
               </h3>
               <ol className="relative space-y-5 border-l pl-6">
                 {result.learningPlan
@@ -157,7 +163,7 @@ export function SkillsPlanner() {
                       <div className="flex flex-wrap items-center gap-2">
                         <h4 className="font-medium">{step.title}</h4>
                         <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
-                          ~{step.durationWeeks} wk
+                          約{step.durationWeeks}週間
                         </span>
                       </div>
                       <p className="mt-1 text-sm text-muted-foreground text-pretty">

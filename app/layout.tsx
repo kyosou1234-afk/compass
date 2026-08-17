@@ -1,11 +1,18 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { Inter, Noto_Sans_JP, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+})
+
+const notoSansJp = Noto_Sans_JP({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-noto-jp',
   display: 'swap',
 })
 
@@ -16,9 +23,9 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  title: 'Career Compass AI — Your Personal AI Career Coach',
+  title: 'Career Compass AI — あなた専用のAIキャリアコーチ',
   description:
-    'Get AI-powered career guidance, resume analysis, tailored job recommendations, and a personalized skills-gap learning plan.',
+    'AIによるキャリア相談、職務経歴書の分析、あなたに合った職種のおすすめ、スキル不足を埋める学習プランを、この1つの場所で。',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -54,8 +61,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} bg-background`}
+      lang="ja"
+      className={`${inter.variable} ${notoSansJp.variable} ${spaceGrotesk.variable} bg-background`}
     >
       <body className="font-sans antialiased">
         {children}

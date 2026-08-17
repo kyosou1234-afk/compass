@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
   if (!resume || resume.trim().length < 40) {
     return Response.json(
-      { error: 'Please paste a more complete resume (at least a few lines).' },
+      { error: 'もう少し詳しい職務経歴書を貼り付けてください（数行以上）。' },
       { status: 400 },
     )
   }
@@ -20,12 +20,13 @@ export async function POST(req: Request) {
   const { object } = await generateObject({
     model: MODEL,
     schema: resumeAnalysisSchema,
-    prompt: `Analyze the following resume as an expert technical recruiter and career coach.
-${targetRole ? `The candidate is targeting this role: "${targetRole}". Judge fit accordingly.` : 'Infer the most likely target role from the content.'}
+    prompt: `あなたは経験豊富なテクニカルリクルーター兼キャリアコーチです。以下の職務経歴書を分析してください。
+${targetRole ? `候補者はこの職種を目指しています：「${targetRole}」。それに応じて適合度を判断してください。` : '内容から、最も可能性の高い目標職種を推測してください。'}
 
-Be specific and reference the actual content. Prioritize the improvements by impact.
+具体的に、実際の記載内容に触れながら分析してください。改善点はインパクトの大きい順に優先順位をつけてください。
+出力のすべてのテキスト（要約・強み・改善点・提案・キーワード）は必ず自然な日本語で記述してください。
 
-RESUME:
+職務経歴書:
 """
 ${resume.slice(0, 12000)}
 """`,

@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
   if (!targetRole || targetRole.trim().length < 2) {
     return Response.json(
-      { error: 'Please tell us the role you want to grow into.' },
+      { error: '目指したい職種を入力してください。' },
       { status: 400 },
     )
   }
@@ -20,14 +20,15 @@ export async function POST(req: Request) {
   const { object } = await generateObject({
     model: MODEL,
     schema: skillsGapSchema,
-    prompt: `You are a career-development expert building a skills-gap analysis and learning roadmap.
+    prompt: `あなたはキャリア開発の専門家で、スキルギャップ分析と学習ロードマップを作成します。
 
-Target role: "${targetRole}"
-Current skills / background: ${currentSkills || 'not specified — assume an early-career beginner'}
+目標職種: 「${targetRole}」
+今のスキル・経歴: ${currentSkills || '指定なし — キャリア初期の初心者と想定してください'}
 
-Identify the key skills required for the target role, estimate the person's current level vs the
-required level for each, and build an ordered, realistic learning plan to close the gaps.
-Be encouraging and concrete about resources and timelines.`,
+目標職種に必要な主要スキルを特定し、各スキルについてこの人の現在のレベルと必要なレベルを見積もり、
+ギャップを埋めるための、順序立てた現実的な学習プランを作成してください。
+励ましつつ、教材や期間について具体的に示してください。
+出力のすべてのテキスト（要約・スキル名・ステップのタイトルや説明・教材など）は必ず自然な日本語で記述してください。`,
   })
 
   return Response.json(object)
