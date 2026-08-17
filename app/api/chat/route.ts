@@ -1,11 +1,13 @@
 import {
   convertToModelMessages,
+  createUIMessageStream,
   createUIMessageStreamResponse,
   streamText,
   toUIMessageStream,
   type UIMessage,
 } from 'ai'
-import { MODEL } from '@/lib/ai'
+import { hasValidGeminiKey, MODEL } from '@/lib/ai'
+import { demoChatReply } from '@/lib/demo-data'
 
 export const maxDuration = 30
 
@@ -24,6 +26,24 @@ const SYSTEM_PROMPT = `あなたは「Career Compass」という、あたたか�
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json()
+
+  // APIキーが未設定・不正なときは、デモ用の見本回答を少しずつ表示します。
+  if (!hasValidGeminiKey()) {
+    const stream = createUIMessageStream({
+      async execute({ writer }) {
+        const id = 'demo-text'
+        writer.write({ type: 'text-start', id })
+        // 1文字ずつ流して、ストリーミングらしい表示にします。
+        const chars = [...demoChatReply]
+        for (let i = 0; i < chars.length; i++) {
+          writer.write({ type: 'text-delta', id, delta: chars[i] })
+          if (i % 2 === 0) await new Promise((r) => setTimeout(r, 12))
+        }
+        writer.write({ type: 'text-end', id })
+      },
+    })
+    return createUIMessageStreamResponse({ stream })
+  }
 
   const result = streamText({
     model: MODEL,

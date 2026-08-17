@@ -1,5 +1,6 @@
 import { generateObject } from 'ai'
-import { MODEL } from '@/lib/ai'
+import { hasValidGeminiKey, MODEL } from '@/lib/ai'
+import { demoSkills } from '@/lib/demo-data'
 import { skillsGapSchema } from '@/lib/schemas'
 
 export const maxDuration = 30
@@ -15,6 +16,12 @@ export async function POST(req: Request) {
       { error: '目指したい職種を入力してください。' },
       { status: 400 },
     )
+  }
+
+  // APIキーが未設定・不正なときは、デモ用の見本データを返します。
+  if (!hasValidGeminiKey()) {
+    await new Promise((r) => setTimeout(r, 700))
+    return Response.json({ ...demoSkills, targetRole })
   }
 
   const { object } = await generateObject({
